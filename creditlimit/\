@@ -1,0 +1,30 @@
+/* 
+ * creditlimit
+ *	
+ * Determine if a department store customer has exceeded their credit card limit or not
+ * For each customer, their accound number, balance at the beginning of the month, total of all
+ * items charged by this customer this month, total of all credits applied to the customer this
+ * month and their allowed credit limit.
+ *
+ * Joacim Eriksson
+ * 2016-04-09
+*/
+#include <stdio.h>
+
+int main() 
+{
+	/* Declare variables */
+	int AccountNumber, BeginningBalance, TotalCharged, TotalCredit, AllowedCredit;
+	
+	/* Ask the user for an account number and instruct them that -1 ends the prrogram */
+	printf("Enter account number (-1 to end): ");
+	/* Put that value into the variable 'AccountNumber' */
+	scanf("%d", &AccountNumber);
+	
+	while(AccountNumber != -1)
+	{
+		
+	}
+
+	return 0;
+}
