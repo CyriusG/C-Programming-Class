@@ -13,6 +13,7 @@
 
 int main(void) 
 {
+  /* Declare and initialize variables */
 	float sales[NUMBER_OF_QUARTERS][NUMBER_OF_SALESMEN]=
     {{3.3, 2.2, 7.1}, 
     {4.0, 5.5, 3.1}, 
@@ -20,49 +21,84 @@ int main(void)
     {2.2, 2.2, 1.2}};
 	int quarter, headerIndex, salesmenIndex, quarterIndex;
   
-  printf("%10s","Quarter");
-  for (headerIndex = 0; headerIndex < NUMBER_OF_QUARTERS; ++headerIndex) {
+  /* Print all sales for every quarter per salesman in a tabular fashion */
+  printf("%11s","Quarter");
+  /* Print the number of each quarter */
+  for (headerIndex = 0; headerIndex < NUMBER_OF_QUARTERS; ++headerIndex) 
+  {
     printf("%5d", headerIndex + 1);
-
+  
+    /* If it is the last quarter print a new line */
     if(headerIndex == NUMBER_OF_QUARTERS - 1)
     {
       printf("\n");
     }
   }
-
-  for (salesmenIndex = 0; salesmenIndex < NUMBER_OF_SALESMEN; ++salesmenIndex) {
-
+  
+  /* Print the sales figures for the salesman for each quarter */
+  for (salesmenIndex = 0; salesmenIndex < NUMBER_OF_SALESMEN; ++salesmenIndex) 
+  {
+    /* Print what salesman a line belongs to */
     printf("%10s", "Salesman ");
     printf("%d", salesmenIndex + 1);
-
-    for (quarterIndex = 0; quarterIndex < NUMBER_OF_QUARTERS; ++quarterIndex) {
+  
+    /* Print the sales figure for every quarter for that salesman */
+    for (quarterIndex = 0; quarterIndex < NUMBER_OF_QUARTERS; ++quarterIndex) 
+    {
       printf("%5.1f", sales[quarterIndex][salesmenIndex]);
+      /* If it is the last quarter, print also a new line */
       if(quarterIndex == NUMBER_OF_QUARTERS - 1)
       {
         printf("\n");
       }
     }
   }
-
+  
+  /* Ask the user to input a quarter to sum upp */
 	printf("Enter what quarter to calculate the sum off: ");
 	scanf("%d", &quarter);  
   
+  /* Print the results */
   printf("Sum of quarter %d was %.1f\n", quarter, quarterSum(sales, quarter));
 
+  /* The program ran without any problems */
 	return 0;
 }
 
+/*
+ * Function quarterSum
+ * ___________________
+ * Sums up the sales for a quarter specified
+ *
+ * sales[][3]: The sales figure to sum up
+ * quarter: What quarter to sum up
+ *
+ * returns: Returns the sum of the sales figures for the specified quarter or 0 if an invalid 
+ *          quarter was inputed
+ */
 float quarterSum(float sales[][3], int quarter) 
 {
+  /* Declare and initialize variables, i used as index for the loop used to sum up the sales */
   int i;
   float sum = 0;
   
+  /* Make sure the input is sane */
   if(quarter > 0 && quarter < 5)
   {
-    for (i = 0; i < NUMBER_OF_SALESMEN; ++i) {
+    /* Loop through all the salesmen */
+    for (i = 0; i < NUMBER_OF_SALESMEN; ++i) 
+    {
+      /* 
+       * The user is asked to input quarter 1 - 4, therefore it is required to subtract 1 from the 
+       * quarter
+       */
       sum += sales[quarter - 1][i];
     }
   }
 
+  /* 
+   * Returns the calculated sum, if the user inputed a non-existant quarter (i.e. something that 
+   * was not between 1 and 4), it will return a 0 
+   */
   return sum;
 }
