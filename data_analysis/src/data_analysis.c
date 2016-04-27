@@ -19,47 +19,63 @@ int main(void)
     {4.0, 5.5, 3.1}, 
     {6.9, 0.0, 3.5}, 
     {2.2, 2.2, 1.2}};
-	int quarter, headerIndex, salesmenIndex, quarterIndex;
+	int quarter, headerIndex, salesmenIndex, quarterIndex, running = 1, validMenuInput;
   
-  /* Print all sales for every quarter per salesman in a tabular fashion */
-  printf("%11s","Quarter");
-  /* Print the number of each quarter */
-  for (headerIndex = 0; headerIndex < NUMBER_OF_QUARTERS; ++headerIndex) 
+
+  do
   {
-    printf("%5d", headerIndex + 1);
-  
-    /* If it is the last quarter print a new line */
-    if(headerIndex == NUMBER_OF_QUARTERS - 1)
+    /* Print all sales for every quarter per salesman in a tabular fashion */
+    printf("%11s","Quarter");
+    /* Print the number of each quarter */
+    for (headerIndex = 0; headerIndex < NUMBER_OF_QUARTERS; ++headerIndex) 
     {
-      printf("\n");
-    }
-  }
-  
-  /* Print the sales figures for the salesman for each quarter */
-  for (salesmenIndex = 0; salesmenIndex < NUMBER_OF_SALESMEN; ++salesmenIndex) 
-  {
-    /* Print what salesman a line belongs to */
-    printf("%10s", "Salesman ");
-    printf("%d", salesmenIndex + 1);
-  
-    /* Print the sales figure for every quarter for that salesman */
-    for (quarterIndex = 0; quarterIndex < NUMBER_OF_QUARTERS; ++quarterIndex) 
-    {
-      printf("%5.1f", sales[quarterIndex][salesmenIndex]);
-      /* If it is the last quarter, print also a new line */
-      if(quarterIndex == NUMBER_OF_QUARTERS - 1)
+      printf("%5d", headerIndex + 1);
+    
+      /* If it is the last quarter print a new line */
+      if(headerIndex == NUMBER_OF_QUARTERS - 1)
       {
         printf("\n");
       }
     }
+    
+    /* Print the sales figures for the salesman for each quarter */
+    for (salesmenIndex = 0; salesmenIndex < NUMBER_OF_SALESMEN; ++salesmenIndex) 
+    {
+      /* Print what salesman a line belongs to */
+      printf("%10s", "Salesman ");
+      printf("%d", salesmenIndex + 1);
+    
+      /* Print the sales figure for every quarter for that salesman */
+      for (quarterIndex = 0; quarterIndex < NUMBER_OF_QUARTERS; ++quarterIndex) 
+      {
+        printf("%5.1f", sales[quarterIndex][salesmenIndex]);
+        /* If it is the last quarter, print also a new line */
+        if(quarterIndex == NUMBER_OF_QUARTERS - 1)
+        {
+          printf("\n");
+        }
+      }
+    }
+    
+    /* Ask the user to input a quarter to sum upp */
+    printf("Enter what quarter to calculate the sum off: ");
+    scanf("%d", &quarter);  
+    
+    /* Print the results */
+    printf("Sum of quarter %d was %.1f\n", quarter, quarterSum(sales, quarter));
+
+    /* Ask if the user wants to run the program again */
+    printf("\nEnter 0 to exit the program or any non-zero, positive number to run again: ");
+    validMenuInput = scanf("%d", &running);
+    
+    /* Exit the program if the user inputs garbage */
+    if(running < 0 || validMenuInput < 1)
+    {
+      running = 0;
+    }
+
   }
-  
-  /* Ask the user to input a quarter to sum upp */
-	printf("Enter what quarter to calculate the sum off: ");
-	scanf("%d", &quarter);  
-  
-  /* Print the results */
-  printf("Sum of quarter %d was %.1f\n", quarter, quarterSum(sales, quarter));
+  while(running);
 
   /* The program ran without any problems */
 	return 0;
@@ -76,7 +92,7 @@ int main(void)
  * returns: Returns the sum of the sales figures for the specified quarter or 0 if an invalid 
  *          quarter was inputed
  */
-float quarterSum(float sales[][3], int quarter) 
+float quarterSum(const float sales[][3], int quarter) 
 {
   /* Declare and initialize variables, i used as index for the loop used to sum up the sales */
   int i;
