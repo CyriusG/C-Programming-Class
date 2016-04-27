@@ -20,7 +20,6 @@ int main(void)
     {6.9, 0.0, 3.5}, 
     {2.2, 2.2, 1.2}};
 	int quarter, headerIndex, salesmenIndex, quarterIndex, running = 1, validMenuInput;
-  
 
   do
   {
