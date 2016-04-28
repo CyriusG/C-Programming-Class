@@ -19,7 +19,7 @@ int main(void)
     {4.0, 5.5, 3.1}, 
     {6.9, 0.0, 3.5}, 
     {2.2, 2.2, 1.2}};
-	int quarter, headerIndex, salesmenIndex, quarterIndex, running = 1, validMenuInput;
+	int quarter, headerIndex, salesmenIndex, quarterIndex, running = 1, validMenuInput, quarterInput;
 
   do
   {
@@ -57,22 +57,34 @@ int main(void)
     }
     
     /* Ask the user to input a quarter to sum upp */
-    printf("Enter what quarter to calculate the sum off: ");
-    scanf("%d", &quarter);  
-    
-    /* Print the results */
-    printf("Sum of quarter %d was %.1f\n", quarter, quarterSum(sales, quarter));
+    do
+    {
+      printf("Enter what quarter to calculate the sum off: ");
 
-    /* Ask if the user wants to run the program again */
-    printf("\nEnter 0 to exit the program or any non-zero, positive number to run again: ");
-    validMenuInput = scanf("%d", &running);
-    
-    /* Exit the program if the user inputs garbage */
-    if(running < 0 || validMenuInput < 1)
+      quarterInput = scanf("%d", &quarter); 
+    }
+    /* Loop only if the user input was valid to prevent infinite loop */
+    while(quarterInput == 1 && (quarter > NUMBER_OF_QUARTERS || quarter < 1));
+     
+    if(quarterInput == 1)
+    { 
+      /* Print the results */
+      printf("Sum of quarter %d was %.1f\n", quarter, quarterSum(sales, quarter));
+
+      /* Ask if the user wants to run the program again */
+      printf("\nEnter 0 to exit the program or any non-zero, positive number to run again: ");
+      validMenuInput = scanf("%d", &running);
+      
+      /* Exit the program if the user inputs garbage */
+      if(running < 0 || validMenuInput < 1)
+      {
+        running = 0;
+      }
+    }
+    else
     {
       running = 0;
     }
-
   }
   while(running);
 
