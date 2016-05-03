@@ -36,7 +36,7 @@ int main(void)
                 printf("\n");
             }
         }
-    
+
         /* Print the sales figures for the salesman for each quarter */
         for (salesmenIndex = 0; salesmenIndex < NUMBER_OF_SALESMEN; ++salesmenIndex) 
         {
