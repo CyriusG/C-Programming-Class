@@ -16,6 +16,6 @@ struct cell
 
 
 /* Functions */
-void generateBoard(struct cell gameBoard[][BOARD_Y]);
-void drawBoard(struct cell gameBoard[][BOARD_Y]);
+void generateBoard(struct cell gameBoard[], int boardY, int boardX);
+void drawBoard(struct cell gameBoard[], int boardY, int boardX);
 void selectCell(int *selectY, int *selectX);

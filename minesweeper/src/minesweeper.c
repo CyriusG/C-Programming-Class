@@ -1,7 +1,8 @@
 /* 
  * minesweeper
  *	
- * <description>
+ * Make a safe passage through the minefield.
+ * Reveal cells, but try to avoid any mines!
  *
  * Joacim Eriksson
  * 2016-05-04
@@ -13,17 +14,18 @@ int main(void)
 	int selectY, selectX;
 
 	/* Declare a two dimensional array of cells as the gameboard. */
-	struct cell gameBoard[BOARD_X][BOARD_Y];
+	struct cell gameBoard[BOARD_Y * BOARD_X];
 	
 	/* Set the seed for the random number generator. */
 	srand(time(NULL));
 	
 	/* Generate a new gameboard. */	
-	generateBoard(gameBoard);
-	
-	/* Draw the gameboard once. */
-	drawBoard(gameBoard);
+	generateBoard(gameBoard, BOARD_Y, BOARD_X);
 
+	/* Draw the gameboard once. */
+	drawBoard(gameBoard, BOARD_Y, BOARD_X);
+
+	/* Ask the user to select a cell and print the x and y coordinates. */
 	selectCell(&selectY, &selectX);
 	printf("%d, %d\n", selectY, selectX);
 
