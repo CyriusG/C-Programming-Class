@@ -68,12 +68,12 @@ void drawBoard(struct cell gameBoard[], int boardY, int boardX)
 	int index, headerX;
 
 	/* Indent the x header by two positions. */
-	printf("%2s", " ");
+	printf("%3s", " ");
 
 	/* Print the x header, 0 through BOARD_X. */
 	for (headerX = 0; headerX < boardX; ++headerX) 
 	{
-		printf("%2d", headerX);
+		printf("%3d", headerX);
 	}
 	
 	/* Print a new line when the x header has been printed. */	
@@ -84,28 +84,28 @@ void drawBoard(struct cell gameBoard[], int boardY, int boardX)
 		/* Print the y header if it is on the first x index. */
 		if(gameBoard[index].x == 0)
 		{
-			printf("%2c", 65 + gameBoard[index].y);
+			printf("%3c", 65 + gameBoard[index].y);
 		}
 		
 		/* If a cell is revealed with no bombs around and it is not a bomb, print an empty cell. */
 		if(gameBoard[index].revealed && gameBoard[index].bombsAround == 0 && gameBoard[index].bomb != 0)
 		{
-			printf("%2s", " ");
+			printf("%3s", " ");
 		}
 		/* If a cell is revealed, with bombs around it and it is not a bomb, print the number of bombs around. */
 		else if(gameBoard[index].revealed && gameBoard[index].bombsAround != 0 && gameBoard[index].bomb !=0)
 		{
-			printf("%2d", gameBoard[index].bombsAround);
+			printf("%3d", gameBoard[index].bombsAround);
 		}
 		/* If a cell is revealed and it is a bomb, print an X. */
 		else if(gameBoard[index].revealed && gameBoard[index].bomb == 0)
 		{
-			printf("%2s", "X");
+			printf("%3s", "X");
 		}
 		/* Otherwise print an *. */
 		else
 		{
-			printf("%2s", "*");
+			printf("%3s", "*");
 		}
 		
 		/* New line if it is the last cell in the row. */

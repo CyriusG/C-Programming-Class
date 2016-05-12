@@ -4,8 +4,8 @@
 #include <ctype.h>
 
 /* Constants */
-#define BOARD_X 10
-#define BOARD_Y 10
+#define BOARD_X 15
+#define BOARD_Y 15
 
 /* Structures */
 struct cell 
