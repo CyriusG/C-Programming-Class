@@ -11,23 +11,43 @@
 
 int main(void) 
 { 
+	int running = 1;
 	int selectY, selectX;
 
-	/* Declare a two dimensional array of cells as the gameboard. */
-	struct cell gameBoard[BOARD_Y * BOARD_X];
+	/* Declare a pointer to the gameBoard */
+	struct cell *gameBoard;
+
+	gameBoard = (struct cell *) malloc((BOARD_Y * BOARD_X) * sizeof(struct cell));
+
+	if(gameBoard == NULL)
+	{
+		printf("Out of memory.\n");
+		return 0;
+	}
 	
 	/* Set the seed for the random number generator. */
 	srand(time(NULL));
 	
 	/* Generate a new gameboard. */	
 	generateBoard(gameBoard, BOARD_Y, BOARD_X);
+	while(running)
+	{
+		/* Draw the gameboard once. */
+		drawBoard(gameBoard, BOARD_Y, BOARD_X);
 
-	/* Draw the gameboard once. */
-	drawBoard(gameBoard, BOARD_Y, BOARD_X);
+		/* Ask the user to select a cell and print the x and y coordinates. */
+		selectCell(&selectY, &selectX);
+		
+		if(revealCell(gameBoard, BOARD_Y, BOARD_X, coordinatesToIndex(selectY, selectX, BOARD_Y)))
+		{
+			revealAllBombs(gameBoard, BOARD_Y, BOARD_X);
+			drawBoard(gameBoard, BOARD_Y, BOARD_X);
+			running = 0;
+		}
+	}
 
-	/* Ask the user to select a cell and print the x and y coordinates. */
-	selectCell(&selectY, &selectX);
-	printf("%d, %d\n", selectY, selectX);
+	/* Free gameBoard from memory. */
+	free(gameBoard);
 
 	return 0;
 }

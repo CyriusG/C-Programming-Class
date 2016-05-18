@@ -27,7 +27,7 @@ void generateBoard(struct cell gameBoard[], int boardY, int boardX)
 		 * Generate a number between 0 and 9, a 0 is considered a bomb making it currently 
 		 * a 10% chance of generating a bomb. 
 		 */	
-		gameBoard[index].bomb = rand() % 10;
+		gameBoard[index].bomb = rand() % 5;
 		/* Make each cell hidden and set the amount of bombs around it to 0. */
 		gameBoard[index].revealed = 0;
 		gameBoard[index].bombsAround = 0;		
@@ -63,9 +63,12 @@ void generateBoard(struct cell gameBoard[], int boardY, int boardX)
  *	Draw the gameboard.
  */
 void drawBoard(struct cell gameBoard[], int boardY, int boardX)
-{
+{	
 	/* Declare index variables used by the for loops. */
 	int index, headerX;
+
+	/* Send the code to clear the screen each time the board is drawn. */
+	clear();
 
 	/* Indent the x header by two positions. */
 	printf("%3s", " ");
@@ -120,4 +123,46 @@ void drawBoard(struct cell gameBoard[], int boardY, int boardX)
 			printf("\n");
 		}
 	}
+}
+
+/*
+ *	Reveals a cell on the inputed index.
+ *
+ *	Returns 1 if bomb.
+ */
+int revealCell(struct cell gameBoard[], int boardY, int boardX, int selectIndex)
+{
+	int bomb = 0;
+
+	printf("%d\n", selectIndex);	
+
+
+	gameBoard[selectIndex].revealed = 1;
+	if(gameBoard[selectIndex].bomb == 0)
+	{
+		bomb = 1;
+	}
+	
+	return bomb;
+}
+
+void revealAllBombs(struct cell gameBoard[], int boardY, int boardX)
+{
+	int boardIndex;
+
+	for (boardIndex = 0; boardIndex < boardY * boardX; ++boardIndex) 
+	{
+		if(gameBoard[boardIndex].bomb == 0 && gameBoard[boardIndex].revealed == 0)
+		{
+			gameBoard[boardIndex].revealed = 1;
+		}	
+	}
+}
+
+/*
+ *	Converts two coordinates to an index.
+ */
+int coordinatesToIndex(int y, int x, int boardY)
+{
+	return (y * boardY) + x;	
 }
