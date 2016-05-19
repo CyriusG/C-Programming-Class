@@ -12,11 +12,14 @@
 int main(void) 
 { 
 	int running = 1;
-	int selectY, selectX;
+	int selectY, selectX, revealCellReturn;
 
 	/* Declare a pointer to the gameBoard */
 	struct cell *gameBoard;
 
+	int score = 0;
+
+	/* Allocate memory for the gameboard. */
 	gameBoard = (struct cell *) malloc((BOARD_Y * BOARD_X) * sizeof(struct cell));
 
 	if(gameBoard == NULL)
@@ -33,16 +36,34 @@ int main(void)
 	while(running)
 	{
 		/* Draw the gameboard once. */
-		drawBoard(gameBoard, BOARD_Y, BOARD_X);
+		drawBoard(gameBoard, BOARD_Y, BOARD_X, score);
 
 		/* Ask the user to select a cell and print the x and y coordinates. */
 		selectCell(&selectY, &selectX);
 		
-		if(revealCell(gameBoard, BOARD_Y, BOARD_X, coordinatesToIndex(selectY, selectX, BOARD_Y)))
+		revealCellReturn = revealCell(gameBoard, BOARD_Y, BOARD_X, coordinatesToIndex(selectY, selectX, BOARD_Y));
+
+		if(revealCellReturn == 1)
 		{
 			revealAllBombs(gameBoard, BOARD_Y, BOARD_X);
-			drawBoard(gameBoard, BOARD_Y, BOARD_X);
+			drawBoard(gameBoard, BOARD_Y, BOARD_X, score);
 			running = 0;
+		}
+		else if(revealCellReturn == 0)
+		{
+			/* 
+			 * Increment the score.
+			 *
+			 * Temporary, will be replaced by the ripple reveal function that reveals multiple cells at once.
+			 */
+			++score;
+
+			/* Check if the last cell was revealed. */
+			if(lastRevealed(gameBoard, BOARD_Y, BOARD_X))
+			{
+				drawBoard(gameBoard, BOARD_Y, BOARD_X, score);
+				running = 0;
+			}
 		}
 	}
 
@@ -88,4 +109,14 @@ void selectCell(int *selectY, int *selectX)
 	/* When the sanity checks went well the Y and X variables will be updated using the pointers. */
 	*selectY = toupper(selectedY) - 65;
 	*selectX = selectedX;
+}
+
+/*
+ *	Converts two coordinates to an index.
+ *
+ *	Returns the index for those two coordinates.
+ */
+int coordinatesToIndex(int y, int x, int boardY)
+{
+	return (y * boardY) + x;	
 }
