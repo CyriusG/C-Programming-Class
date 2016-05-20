@@ -11,16 +11,49 @@
 
 int main(void) 
 { 
-	int running = 1;
+	int running = 1, difficult;
+	int boardY, boardX, bombs;
 	int selectY, selectX, revealCellReturn;
-
+	
 	/* Declare a pointer to the gameBoard */
 	struct cell *gameBoard;
 
-	int score = 0;
+	int score;
 
+	
+	difficult = difficultSetting();
+
+	switch(difficult)
+	{
+		case 1:
+			boardY = 10;
+			boardX = 10;
+			bombs = 10;
+		break;
+
+		case 2:
+			boardY = 16;
+			boardX = 16;
+			bombs = 40;
+		break;
+
+		case 3:
+			boardY = 25;
+			boardX = 25;
+			bombs = 100;
+		break;
+
+		case 4:
+			boardY = 10;
+			boardX = 10;
+			bombs = 2;
+		break;
+	}
+	
 	/* Allocate memory for the gameboard. */
-	gameBoard = (struct cell *) malloc((BOARD_Y * BOARD_X) * sizeof(struct cell));
+	gameBoard = (struct cell *) malloc((boardY * boardX) * sizeof(struct cell));
+
+	score = boardY * boardX - bombs;
 
 	if(gameBoard == NULL)
 	{
@@ -32,36 +65,34 @@ int main(void)
 	srand(time(NULL));
 	
 	/* Generate a new gameboard. */	
-	generateBoard(gameBoard, BOARD_Y, BOARD_X);
+	generateBoard(gameBoard, boardY, boardX, bombs);
+
+	/* Game loop */
 	while(running)
 	{
 		/* Draw the gameboard once. */
-		drawBoard(gameBoard, BOARD_Y, BOARD_X, score);
+		drawBoard(gameBoard, boardY, boardX, score);
 
 		/* Ask the user to select a cell and print the x and y coordinates. */
-		selectCell(&selectY, &selectX);
+		selectCell(&selectY, &selectX, boardY, boardX);
 		
-		revealCellReturn = revealCell(gameBoard, BOARD_Y, BOARD_X, coordinatesToIndex(selectY, selectX, BOARD_Y));
+		revealCellReturn = revealCell(gameBoard, boardY, boardX, coordinatesToIndex(selectY, selectX, boardY), &score);
 
+		/* If the user revealed a bomb, reveal all bombs, redraw the board and end the game. */
 		if(revealCellReturn == 1)
 		{
-			revealAllBombs(gameBoard, BOARD_Y, BOARD_X);
-			drawBoard(gameBoard, BOARD_Y, BOARD_X, score);
+			revealAllBombs(gameBoard, boardY, boardX);
+			drawBoard(gameBoard, boardY, boardX, score);
 			running = 0;
 		}
-		else if(revealCellReturn == 0)
-		{
-			/* 
-			 * Increment the score.
-			 *
-			 * Temporary, will be replaced by the ripple reveal function that reveals multiple cells at once.
-			 */
-			++score;
 
+		/* If the user revealed a cell, check wether it was the last cell to be revealed, redraw the board and end the game */
+		if(revealCellReturn == 0)
+		{
 			/* Check if the last cell was revealed. */
-			if(lastRevealed(gameBoard, BOARD_Y, BOARD_X))
+			if(lastRevealed(gameBoard, boardY, boardX))
 			{
-				drawBoard(gameBoard, BOARD_Y, BOARD_X, score);
+				drawBoard(gameBoard, boardY, boardX, score);
 				running = 0;
 			}
 		}
@@ -77,7 +108,7 @@ int main(void)
  * Asks the user to select a cell by specifying x and y coordinates and reveals the selected 
  * cell. 
  */
-void selectCell(int *selectY, int *selectX)
+void selectCell(int *selectY, int *selectX, int boardY, int boardX)
 {
 	/* Declare variables used to read the input. */
 	char selectedY;
@@ -97,7 +128,7 @@ void selectCell(int *selectY, int *selectX)
 		validInputs = scanf("%c%d", &selectedY, &selectedX);
 	
 		/* Does a sanity check to make sure that the user input is within the gameboard. */	
-		if(toupper(selectedY) - 65 >= 0 && toupper(selectedY) - 65 < BOARD_Y && selectedX >= 0 && selectedX < BOARD_X && 
+		if(toupper(selectedY) - 65 >= 0 && toupper(selectedY) - 65 < boardY && selectedX >= 0 && selectedX < boardX && 
 			validInputs == 2) 
 		{
 			correctInput = 1;
@@ -109,6 +140,20 @@ void selectCell(int *selectY, int *selectX)
 	/* When the sanity checks went well the Y and X variables will be updated using the pointers. */
 	*selectY = toupper(selectedY) - 65;
 	*selectX = selectedX;
+}
+
+int difficultSetting()
+{
+	int difficultSetting;
+
+	printf("1) Easy (10x10 - 10 bombs)\n");
+	printf("2) Medium (16x16 - 40 bombs)\n");
+	printf("3) Hard (25x25 - 100 bombs)\n");
+
+	printf("Enter difficult setting (1 - 3): ");
+	scanf("%d", &difficultSetting);
+
+	return difficultSetting;
 }
 
 /*
