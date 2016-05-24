@@ -12,7 +12,8 @@
 int main(void) 
 { 
 	int running = 1, difficult;
-	int boardY, boardX, bombs;
+	/* Initialize the board to remove any compilation warnings. */
+	int boardY = 10, boardX = 10, bombs = 10;
 	int selectY, selectX, revealCellReturn;
 	
 	/* Declare a pointer to the gameBoard */
@@ -20,9 +21,10 @@ int main(void)
 
 	int score;
 
-	
+	/* Read the difficult setting. */
 	difficult = difficultSetting();
-
+	
+	/* Configure the board depending on what the user chose, if any value other than 1 - 4 was chosen, exit the program. */
 	switch(difficult)
 	{
 		case 1:
@@ -47,6 +49,10 @@ int main(void)
 			boardY = 10;
 			boardX = 10;
 			bombs = 2;
+		break;
+
+		default:
+			running = 0;
 		break;
 	}
 	

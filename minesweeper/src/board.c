@@ -124,7 +124,9 @@ void drawBoard(struct cell gameBoard[], int boardY, int boardX, int score)
  */
 int revealCell(struct cell gameBoard[], int boardY, int boardX, int selectIndex, int *score)
 {
-	int lookUp, lookRight, lookDown, lookLeft;
+	int currentY = gameBoard[selectIndex].y;	
+	int currentX = gameBoard[selectIndex].x;
+	int indexRow, indexColumn, lookY, lookX;
 
 	/* Check so that the cell is not already revealed. */
 	if (gameBoard[selectIndex].revealed == 0)
@@ -135,53 +137,49 @@ int revealCell(struct cell gameBoard[], int boardY, int boardX, int selectIndex,
 		/* Check if it is a bomb, return 1 if it is otherwise return a 0. */
 		if(gameBoard[selectIndex].bomb == BOMB)
 		{
-			printf("BOMB\n");
 			return 1;
 		}
 		else
 		{
-
 			/* Update the score */
 			*score = *score - 1;
 
 			/* Do not look around a cell that is a bomb or has bombs around it. */
 			if(bombsAround(gameBoard, boardY, boardX, selectIndex) == 0 && gameBoard[selectIndex].bomb != BOMB)
-			{
-				/* Calculate the index of the cells to look at. */
-				lookUp = selectIndex - boardX;
-				lookRight = selectIndex + 1;
-				lookDown = selectIndex + boardX;
-				lookLeft = selectIndex - 1;
-
-				/* Make sure that the game does not look outside the board or on already revealed cells. */
-				if(lookUp >= 0 && gameBoard[lookUp].revealed == 0) 
+			{	
+				/* Look at the three surrounding rows. */
+				for (indexRow = 0; indexRow < 3; ++indexRow) 
 				{
-					/* Reveal the cell and update pass in the score so that can be updated. */
-					revealCell(gameBoard, boardY, boardX, lookUp, score);	
-				}
-
-				/* 
-				 * Make sure that the game does not look outside the board, on cells already revealed or on cells not on 
-				 * the same y axis.
-				 */
-				if(lookRight < boardY * boardX && gameBoard[lookRight].revealed == 0 && lookRight / boardX == gameBoard[selectIndex].y)
-				{
-					revealCell(gameBoard, boardY, boardX, lookRight, score);
-				}
-				
-				/* Make sure that the game does not look outside the board or on already revealed cells. */
-				if(lookDown < boardY * boardX && gameBoard[lookDown].revealed == 0)
-				{
-					revealCell(gameBoard, boardY, boardX, lookDown, score);	
-				}
-
-				/* 
-				 * Make sure that the game does not look outside the board, on cells already revealed or on cells not on 
-				 * the same y axis.
-				 */
-				if(lookLeft >= 0 && gameBoard[lookLeft].revealed == 0 && lookLeft / boardX == gameBoard[selectIndex].y) 
-				{
-					revealCell(gameBoard, boardY, boardX, lookLeft, score);
+					/* Calculate the coordinate to look at in the y axis. */
+					lookY = currentY - 1 + indexRow;
+					/* Check so that it is not looking outside the board. */
+					if(lookY >= 0 && lookY < boardY)
+					{
+						/* Look at the three surrounding columns */
+						for (indexColumn = 0; indexColumn < 3; ++indexColumn) 
+						{
+							/* Calculate the coordinate to look at in the x axis. */
+							lookX = currentX - 1 + indexColumn;
+							
+							/* Check so that it is not looking outside the board. */
+							if(lookX >= 0 && lookX < boardX)
+							{	
+								/* Do not look at the cell we are looking around and do not look at already revealed cells. */
+								if(
+									(lookY != currentY || lookX != currentX) 
+									&& gameBoard[coordinatesToIndex(lookY, lookX, boardY)].revealed == 0
+								)
+								{
+									/* Convert the coordinates to an index in the game board and check wether it is a bomb or not. */
+									if(gameBoard[coordinatesToIndex(lookY, lookX, boardY)].bomb != BOMB)
+									{
+										/* If it is a bomb, increment the bomb counter. */
+										revealCell(gameBoard, boardY, boardX, coordinatesToIndex(lookY, lookX, boardY), score);
+									}						
+								}
+							}
+						}
+					}
 				}
 			}
 
